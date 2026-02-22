@@ -1,0 +1,39 @@
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
+
+students = []
+
+# Read file
+with open("data.txt", "r") as file:
+    for line in file:
+        name, marks = line.strip().split(",")
+        students.append((name, int(marks)))
+
+# Calculations
+marks_list = [marks for name, marks in students]
+
+average = sum(marks_list) / len(marks_list)
+highest = max(marks_list)
+lowest = min(marks_list)
+
+# Create PDF
+doc = SimpleDocTemplate("report.pdf")
+styles = getSampleStyleSheet()
+
+content = []
+
+content.append(Paragraph("STUDENT REPORT", styles["Title"]))
+content.append(Spacer(1, 20))
+
+for name, marks in students:
+    content.append(Paragraph(f"Name: {name} | Marks: {marks}", styles["Normal"]))
+    content.append(Spacer(1, 10))
+
+content.append(Spacer(1, 20))
+content.append(Paragraph(f"Average Marks: {average}", styles["Normal"]))
+content.append(Paragraph(f"Highest Marks: {highest}", styles["Normal"]))
+content.append(Paragraph(f"Lowest Marks: {lowest}", styles["Normal"]))
+
+doc.build(content)
+
+print("✅ PDF Generated Successfully!")
